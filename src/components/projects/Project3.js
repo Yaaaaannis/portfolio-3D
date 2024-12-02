@@ -10,10 +10,15 @@ const Project3 = ({ isZoomed }) => {
   const cardRef = useRef()
   const videoRef = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
+  const animationRef = useRef(null)
 
   useEffect(() => {
+    if (animationRef.current) {
+      animationRef.current.kill()
+    }
+
     if (isZoomed) {
-      gsap.fromTo(cardRef.current,
+      animationRef.current = gsap.fromTo(cardRef.current,
         { 
           opacity: 0,
           scale: 0.9,
@@ -29,13 +34,19 @@ const Project3 = ({ isZoomed }) => {
         }
       )
     } else {
-      gsap.to(cardRef.current, {
+      animationRef.current = gsap.to(cardRef.current, {
         opacity: 0,
         scale: 0.9,
         y: 30,
         duration: 0.4,
         ease: "power2.in"
       })
+    }
+
+    return () => {
+      if (animationRef.current) {
+        animationRef.current.kill()
+      }
     }
   }, [isZoomed])
 

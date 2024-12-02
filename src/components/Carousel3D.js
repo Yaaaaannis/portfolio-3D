@@ -8,8 +8,12 @@ import Project2 from './projects/Project2'
 import ProjectModel3 from './models/ProjectModel3'
 // Composants
 import Project1 from './projects/Project1'
+
 import ProjectModel1 from './models/ProjectModel1'
 import Project3 from './projects/Project3'
+
+import styled from 'styled-components'
+
 // Composant pour le modèle 3D de chaque projet
 const ProjectModel = ({ project, isActive }) => {
   switch(project.id) {
@@ -23,6 +27,72 @@ const ProjectModel = ({ project, isActive }) => {
       return null
   }
 }
+
+const CircularTimeline = styled.div`
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  pointer-events: auto;
+  z-index: 1000;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  border-radius: 20px;
+`
+
+const TimelineItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100px;
+`
+
+const Dot = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #333;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  
+  &:hover {
+    transform: scale(1.2);
+  }
+  
+  &.active {
+    background: #ff3366;
+    box-shadow: 0 0 15px rgba(255, 51, 102, 0.5);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 2rem;
+    height: 1px;
+    background: #333;
+    right: -2rem;
+    top: 50%;
+  }
+  
+  &:last-child::after {
+    display: none;
+  }
+`
+
+const Label = styled.div`
+  font-size: 0.8rem;
+  color: ${props => props.active ? '#ff3366' : '#333'};
+  opacity: 0.8;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 1px;
+  text-align: center;
+`
 
 const Carousel3D = ({ projects, setActiveIndex }) => {
   const { raycaster, scene } = useThree()
@@ -40,8 +110,8 @@ const Carousel3D = ({ projects, setActiveIndex }) => {
 
   // Initialisation et configuration de la scène
   useEffect(() => {
-    // Définir la couleur de fond
-    scene.background = new THREE.Color('#F7F7F7')
+    // Un blanc légèrement cassé pour plus de douceur
+    scene.background = new THREE.Color('#FAFAFA')
     
     // Configuration initiale pour le premier projet
     if (groupRef.current) {
@@ -206,6 +276,16 @@ const Carousel3D = ({ projects, setActiveIndex }) => {
     return new THREE.Vector3(x, timelineY, timelineZ)
   })
 
+  useEffect(() => {
+    // Animation d'entrée de la timeline
+    gsap.from(timelineRef.current, {
+      y: 100,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out'
+    })
+  }, [])
+
   return (
     <>
       <group ref={groupRef}>
@@ -252,76 +332,56 @@ const Carousel3D = ({ projects, setActiveIndex }) => {
         })}
       </group>
 
-      {/* Timeline modifiée */}
-      <group ref={timelineRef} visible={!anyProjectZoomed && !isZoomed}>
-        <Line
-          points={timelinePoints}
-          color="#ffffff"
-          lineWidth={1}
-          opacity={0.5}
-        />
-        
-        {timelinePoints.map((point, index) => (
-          <group key={index} position={point}>
-            <mesh
+      <Html
+        position={[0, -4, 0]}
+        center
+        style={{
+          bottom: '2rem',
+          position: 'absolute',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          pointerEvents: 'none'
+        }}
+      >
+        <CircularTimeline ref={timelineRef}>
+          {projects.map((project, index) => (
+            <TimelineItem
+              key={project.id}
               onClick={() => handleTimelineClick(index)}
-              onPointerOver={(e) => {
-                document.body.style.cursor = 'pointer'
-                e.object.scale.multiplyScalar(1.2)
-              }}
-              onPointerOut={(e) => {
-                document.body.style.cursor = 'default'
-                e.object.scale.multiplyScalar(1/1.2)
-              }}
             >
-              <sphereGeometry args={[sphereRadius, 32, 32]} />
-              <meshStandardMaterial 
-                color={activeIndex === index ? '#ff3366' : '#ffffff'}
-                emissive={activeIndex === index ? '#ff3366' : '#000000'}
-                emissiveIntensity={activeIndex === index ? 0.5 : 0}
-              />
-            </mesh>
-            
-            <Html
-              position={[0, -0.2, 0]}
-              center
-              style={{
-                color: activeIndex === index ? '#ff3366' : '#ffffff',
-                fontSize: '0.8rem',
-                opacity: (!anyProjectZoomed && !isZoomed) ? (activeIndex === index ? 1 : 0.7) : 0,
-                transition: 'all 0.3s ease',
-                pointerEvents: 'none',
-                visibility: (!anyProjectZoomed && !isZoomed) ? 'visible' : 'hidden'
-              }}
-            >
-              {projects[index].title || `Projet ${index + 1}`}
-            </Html>
-          </group>
-        ))}
-      </group>
+              <Dot className={activeIndex === index ? 'active' : ''} />
+              <Label active={activeIndex === index}>
+                {project.title}
+              </Label>
+            </TimelineItem>
+          ))}
+        </CircularTimeline>
+      </Html>
 
       {/* Éclairage amélioré */}
-      <ambientLight intensity={0.8} />
+      <ambientLight intensity={0.5} />
       <pointLight 
         position={[10, 10, 10]} 
-        intensity={0.6}
+        intensity={0.8}
         color="#ffffff"
       />
       <pointLight 
         position={[-10, -10, -10]} 
         intensity={0.4}
-        color="#ffffff"
+        color="#e6e6e6"
       />
       <pointLight 
         position={[0, 5, 5]} 
-        intensity={0.5}
-        color="#ffffff"
+        intensity={0.6}
+        color="#f5f5f5"
       />
       
       <Environment 
         preset="studio" 
-        intensity={0.5}
+        intensity={0.3}
       />
+
     </>
   )
 }

@@ -20,11 +20,12 @@ const MusicNote = () => (
 const SoundWaves = ({ isZoomed }) => {
   const notesRef = useRef([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const animationsRef = useRef([]) // Pour stocker les animations GSAP
 
   // Modification des positions initiales des notes
   const notePositions = useMemo(() => {
     const positions = []
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 70; i++) {
       positions.push({
         // Distribution sur tout l'écran
         x: -25 + Math.random() * 50, // -25 à 25 pour couvrir toute la largeur
@@ -76,10 +77,14 @@ const SoundWaves = ({ isZoomed }) => {
   }, [])
 
   useEffect(() => {
+    // Nettoyer toutes les animations précédentes
+    animationsRef.current.forEach(anim => anim.kill())
+    animationsRef.current = []
+
     if (isZoomed) {
       notesRef.current.forEach((note, index) => {
         if (!note) return
-        gsap.fromTo(note.scale,
+        const animation = gsap.fromTo(note.scale,
           { x: 0, y: 0, z: 0 },
           {
             x: notePositions[index].scale,
@@ -90,15 +95,28 @@ const SoundWaves = ({ isZoomed }) => {
             ease: "elastic.out(1, 0.5)"
           }
         )
+        animationsRef.current.push(animation)
       })
     } else {
-      notesRef.current.forEach(note => {
-        if (note) {
-          note.scale.set(0, 0, 0)
-        }
+      notesRef.current.forEach((note, index) => {
+        if (!note) return
+        const animation = gsap.to(note.scale, {
+          x: 0,
+          y: 0,
+          z: 0,
+          duration: 0.3,
+          ease: "power2.in"
+        })
+        animationsRef.current.push(animation)
       })
     }
-  }, [isZoomed, notePositions])
+
+    // Cleanup function
+    return () => {
+      animationsRef.current.forEach(anim => anim.kill())
+      animationsRef.current = []
+    }
+  }, [isZoomed])
 
   useFrame(() => {
     notesRef.current.forEach((note, index) => {

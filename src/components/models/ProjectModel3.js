@@ -8,12 +8,41 @@ Title: Retro Microphone
 
 import React, { useRef } from 'react'
 import { useGLTF, Float } from '@react-three/drei'
+import gsap from 'gsap'
 
 function ProjectModel3(props) {
   const { nodes, materials } = useGLTF('./assets/retro_microphone.glb')
+  const groupRef = useRef()
+
   return (
     <Float>
-      <group {...props} dispose={null} scale={0.001} position={[0, 0.3, 0]}>
+      <group 
+        {...props} 
+        ref={groupRef}
+        dispose={null} 
+        scale={0.001} 
+        position={[0, 0.3, 0]}
+        onPointerOver={(e) => {
+          e.stopPropagation()
+          document.body.style.cursor = 'pointer'
+          gsap.to(groupRef.current.rotation, {
+            y: '+=0.3',
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1,
+            ease: 'power1.inOut'
+          })
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation()
+          document.body.style.cursor = 'default'
+          gsap.to(groupRef.current.rotation, {
+            y: 0,
+            duration: 0.3,
+            ease: 'power1.inOut'
+          })
+        }}
+      >
         <mesh
           castShadow
           receiveShadow

@@ -8,39 +8,65 @@ Title: Red Bull Can
 
 import React, { useRef } from 'react'
 import { useGLTF, Float } from '@react-three/drei'
+import gsap from 'gsap'
 
- function ProjectModel1(props) {
+function ProjectModel1(props) {
   const { nodes, materials } = useGLTF('./assets/redbull.glb')
+  const groupRef = useRef()
+
   return (
     <Float>
-      <group {...props} dispose={null}
+      <group
+        {...props}
+        ref={groupRef}
+        dispose={null}
         position={[0, -0.5, 0]}
+        onPointerOver={(e) => {
+          e.stopPropagation()
+          document.body.style.cursor = 'pointer'
+          gsap.to(groupRef.current.rotation, {
+            y: '+=0.3', // Rotation à gauche
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1,
+            ease: 'power1.inOut'
+          })
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation()
+          document.body.style.cursor = 'default'
+          gsap.to(groupRef.current.rotation, {
+            y: 0, // Retour à la position initiale
+            duration: 0.3,
+            ease: 'power1.inOut'
+          })
+        }}
       >
-      <group scale={0.1}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes['Tube001_02_-_Default_0'].geometry}
-          material={materials['02_-_Default']}
-          position={[0, 0.5, 0]}
-          rotation={[-Math.PI / 2, 0, 1.396]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes['Cylinder001_01_-_Default_0'].geometry}
-          material={materials['01_-_Default']}
-          rotation={[-Math.PI / 2, 0, 0.873]}
-          scale={0.99}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes['Cylinder002_01_-_Default_0'].geometry}
-          material={materials['01_-_Default']}
-          position={[0, 13.3, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-        />
+        <group scale={0.1}>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes['Tube001_02_-_Default_0'].geometry}
+            material={materials['02_-_Default']}
+            position={[0, 0.5, 0]}
+            rotation={[-Math.PI / 2, 0, 1.396]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes['Cylinder001_01_-_Default_0'].geometry}
+            material={materials['01_-_Default']}
+            rotation={[-Math.PI / 2, 0, 0.873]}
+            scale={0.99}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes['Cylinder002_01_-_Default_0'].geometry}
+            material={materials['01_-_Default']}
+            position={[0, 13.3, 0]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          />
         </group>
       </group>
     </Float>

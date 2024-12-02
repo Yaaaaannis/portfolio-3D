@@ -7,12 +7,31 @@ import "./App.css"
 // Components
 import Carousel3D from './components/Carousel3D'
 import Loader from './components/Loader'
+import Contact from './components/Contact'
 
 gsap.registerPlugin(ScrollTrigger)
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [carouselVisible, setCarouselVisible] = useState(false)
+
+  useEffect(() => {
+    const minLoadingTime = setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+
+    return () => clearTimeout(minLoadingTime)
+  }, [])
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        setCarouselVisible(true)
+      }, 800)
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading])
 
   const projects = [
     { 
@@ -74,39 +93,28 @@ function App() {
 
   return (
     <div className="App">
-      <div className="virtual-scroll">
-        {projects.map((project, index) => (
-          <div 
-            key={project.id} 
-            className={`virtual-section virtual-section-${index}`}
-          />
-        ))}
-      </div>
-
-      <Suspense fallback={<Loader />}>
-        <Canvas
-          style={{ 
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh'
-          }}
-          camera={{
-            position: [0, 0, 5],
-            fov: 75,
-            near: 0.1,
-            far: 1000
-          }}
-        >
-          <color attach="background" args={['#000000']} />
-          <Carousel3D 
-            activeIndex={activeIndex} 
-            setActiveIndex={setActiveIndex}
-            projects={projects} 
-          />
-        </Canvas>
+      <Loader isLoading={isLoading} />
+      
+      <Suspense fallback={null}>
+        <div className={`carousel-container ${carouselVisible ? 'visible' : ''}`}>
+          <Canvas
+            camera={{
+              position: [0, 0, 5],
+              fov: 75,
+              near: 0.1,
+              far: 1000
+            }}
+          >
+            <color attach="background" args={['#000000']} />
+            <Carousel3D 
+              activeIndex={activeIndex} 
+              setActiveIndex={setActiveIndex}
+              projects={projects} 
+            />
+          </Canvas>
+        </div>
       </Suspense>
+      <Contact />
     </div>
   )
 }
