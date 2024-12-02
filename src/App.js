@@ -1,25 +1,114 @@
-import logo from './logo.svg';
-import './App.css';
+import { Canvas } from '@react-three/fiber'
+import { Suspense, useEffect, useState } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import "./App.css"
+
+// Components
+import Carousel3D from './components/Carousel3D'
+import Loader from './components/Loader'
+
+gsap.registerPlugin(ScrollTrigger)
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const projects = [
+    { 
+      id: 1, 
+      title: 'Challenge Redbull',
+      description: 'Projet réalisé en une semaine dans le cadre d\'un challenge. Le but était de présenter 3 nouveaux gouts de Redbull en équipe avec un designer.',
+      link: 'https://3dredbull.vercel.app/'
+    },
+    { 
+      id: 2, 
+      title: 'Roaster BMS',
+      description: 'Projet personnel pour mon portfolio. Un roaster 3D de BMS.',
+      link: 'https://bms-eosin.vercel.app/'
+    },
+    { 
+      id: 3, 
+      title: 'Finistère en Scène',
+      description: 'Projet de création d\'une lyre asservie en 3D',
+      link: 'https://3dlight.vercel.app/'
+    },
+    { 
+      id: 4, 
+      title: 'Project 4',
+      description: 'Description détaillée du projet 4...',
+      link: 'https://projet4.com'
+    }
+  ]
+
+  useEffect(() => {
+    // Créer un ScrollTrigger pour chaque section
+    projects.forEach((_, index) => {
+      ScrollTrigger.create({
+        trigger: `.virtual-section-${index}`,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: () => setActiveIndex(index),
+        onEnterBack: () => setActiveIndex(index),
+        // markers: true, // Utile pour le debug
+        scrub: 1, // Rend l'animation plus fluide
+      })
+    })
+
+    // Configurer le smooth scroll avec GSAP
+    gsap.to('.virtual-scroll', {
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.virtual-scroll',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1,
+      }
+    })
+
+    return () => {
+      // Nettoyer tous les ScrollTriggers lors du démontage
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    }
+  }, [projects.length])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <div className="virtual-scroll">
+        {projects.map((project, index) => (
+          <div 
+            key={project.id} 
+            className={`virtual-section virtual-section-${index}`}
+          />
+        ))}
+      </div>
+
+      <Suspense fallback={<Loader />}>
+        <Canvas
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh'
+          }}
+          camera={{
+            position: [0, 0, 5],
+            fov: 75,
+            near: 0.1,
+            far: 1000
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          <color attach="background" args={['#000000']} />
+          <Carousel3D 
+            activeIndex={activeIndex} 
+            setActiveIndex={setActiveIndex}
+            projects={projects} 
+          />
+        </Canvas>
+      </Suspense>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,0 +1,188 @@
+.project-card {
+  background: #e0e5ec;
+  border-radius: 15px;
+  padding: 1.5rem;
+  width: 300px;
+  box-shadow: 
+    8px 8px 15px #a3b1c6,
+    -8px -8px 15px #ffffff;
+  transform: translateZ(0);
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.project-card h2 {
+  color: #2d4263;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  text-shadow: 1px 1px 1px #ffffff;
+}
+
+.project-card p {
+  color: #666;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.content-section {
+  background: #e0e5ec;
+  border-radius: 12px;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
+  box-shadow: inset 3px 3px 7px #a3b1c6,
+              inset -3px -3px 7px #ffffff;
+}
+
+.interactive-element {
+  background: #e0e5ec;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  color: #2d4263;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 
+    5px 5px 10px #a3b1c6,
+    -5px -5px 10px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.interactive-element:hover {
+  box-shadow: 
+    3px 3px 6px #a3b1c6,
+    -3px -3px 6px #ffffff;
+}
+
+.interactive-element:active {
+  box-shadow: inset 2px 2px 5px #a3b1c6,
+              inset -2px -2px 5px #ffffff;
+}
+
+/* Ajout de styles pour les titres de section */
+.content-section h3 {
+  color: #2d4263;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+  text-shadow: 1px 1px 1px #ffffff;
+}
+
+/* Animation de transition pour les éléments interactifs */
+.project-card * {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 
+    inset 3px 3px 7px #a3b1c6,
+    inset -3px -3px 7px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.video-container:hover {
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.3),
+    inset 3px 3px 7px #a3b1c6,
+    inset -3px -3px 7px #ffffff;
+}
+
+.project-video {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+}
+
+.project-video:hover {
+  opacity: 1;
+}
+
+.video-control {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(224, 229, 236, 0.9);
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.3s ease;
+  box-shadow: 
+    3px 3px 6px #a3b1c6,
+    -3px -3px 6px #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-container:hover .video-control {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.video-control:hover {
+  box-shadow: 
+    inset 2px 2px 5px #a3b1c6,
+    inset -2px -2px 5px #ffffff;
+  transform: scale(0.95);
+}
+
+.buttons-container {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.interactive-element {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+  background: #e0e5ec;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  color: #2d4263;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 
+    inset 2px 2px 5px #a3b1c6,
+    inset -2px -2px 5px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.interactive-element:hover {
+  box-shadow: 
+    3px 3px 6px #a3b1c6,
+    -3px -3px 6px #ffffff;
+  transform: translateY(-1px);
+}
+
+.interactive-element:active {
+  box-shadow: 
+    inset 2px 2px 5px #a3b1c6,
+    inset -2px -2px 5px #ffffff;
+  transform: translateY(0);
+}
+
+.interactive-element svg {
+  font-size: 1.1em;
+  transition: transform 0.3s ease;
+}
+
+.interactive-element:hover svg {
+  transform: scale(1.1);
+} 
