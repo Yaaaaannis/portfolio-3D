@@ -1,7 +1,7 @@
 .App {
   position: relative;
   min-height: 100vh;
-  background: #000;
+
 }
 
 .virtual-scroll {
@@ -80,9 +80,9 @@ canvas {
 }
 
 .cursor-follower {
-  width: 30px;
-  height: 30px;
-  border: 2px solid #000;
+  width: 24px;
+  height: 24px;
+  border: 2px solid black;
   border-radius: 100%;
   position: fixed;
   z-index: 9998;
@@ -99,22 +99,4 @@ canvas {
 /* Cacher le curseur par défaut */
 * {
   cursor: none !important;
-}
-
-.cursor.project-hover {
-  transform: scale(1.5);
-  background: #ff3366;
-  mix-blend-mode: difference;
-}
-
-.cursor-follower.project-hover {
-  transform: scale(2);
-  border-color: #ff3366;
-  background: rgba(255, 51, 102, 0.1);
-  mix-blend-mode: difference;
-}
-
-/* Animation pour la transition */
-.cursor, .cursor-follower {
-  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
