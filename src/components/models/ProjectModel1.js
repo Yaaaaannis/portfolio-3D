@@ -6,13 +6,15 @@ Source: https://sketchfab.com/3d-models/red-bull-can-b28f6a805511495a8beaef94a5d
 Title: Red Bull Can
 */
 
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useGLTF, Float } from '@react-three/drei'
 import gsap from 'gsap'
 
-function ProjectModel1(props) {
+function ProjectModel1({ isZoomed, ...props }) {
   const { nodes, materials } = useGLTF('./assets/redbull.glb')
   const groupRef = useRef()
+
+
 
   return (
     <Float>
@@ -25,7 +27,7 @@ function ProjectModel1(props) {
           e.stopPropagation()
           document.body.style.cursor = 'pointer'
           gsap.to(groupRef.current.rotation, {
-            y: '+=0.3', // Rotation à gauche
+            y: '+=0.3',
             duration: 0.3,
             yoyo: true,
             repeat: 1,
@@ -36,7 +38,7 @@ function ProjectModel1(props) {
           e.stopPropagation()
           document.body.style.cursor = 'default'
           gsap.to(groupRef.current.rotation, {
-            y: 0, // Retour à la position initiale
+            y: 0,
             duration: 0.3,
             ease: 'power1.inOut'
           })
@@ -50,12 +52,15 @@ function ProjectModel1(props) {
             material={materials['02_-_Default']}
             position={[0, 0.5, 0]}
             rotation={[-Math.PI / 2, 0, 1.396]}
+            transparent
           />
           <mesh
             castShadow
             receiveShadow
             geometry={nodes['Cylinder001_01_-_Default_0'].geometry}
             material={materials['01_-_Default']}
+            transparent
+            opacity={0.8}
             rotation={[-Math.PI / 2, 0, 0.873]}
             scale={0.99}
           />

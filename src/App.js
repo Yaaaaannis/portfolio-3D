@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     const minLoadingTime = setTimeout(() => {
       setIsLoading(false)
-    }, 3000)
+    }, 2000)
 
     return () => clearTimeout(minLoadingTime)
   }, [])

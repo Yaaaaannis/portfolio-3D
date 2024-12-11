@@ -12,6 +12,7 @@ const Project1 = ({ isZoomed }) => {
   const modelsRef = useRef([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [position, setPosition] = useState([-7, 0, -8])
 
   // Création d'un tableau de positions fixes pour les modèles
   const modelPositions = useMemo(() => {
@@ -183,6 +184,25 @@ const Project1 = ({ isZoomed }) => {
     }
   }
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setPosition([-3, 2, -13]) // Position ajustée pour mobile: centrée, plus haute et plus proche
+      } else {
+        setPosition([-7, 0, -8]) // Position originale pour desktop
+      }
+    }
+
+    // Vérification initiale
+    handleResize()
+
+    // Ajout de l'écouteur d'événement
+    window.addEventListener('resize', handleResize)
+
+    // Nettoyage
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <group>
       {/* Modèles d'arrière-plan avec rotations initiales */}
@@ -195,7 +215,7 @@ const Project1 = ({ isZoomed }) => {
           scale={0}
         >
           <Float speed={1.5} rotationIntensity={0.5}>
-            <ProjectModel1 />
+            <ProjectModel1 isZoomed={isZoomed} />
           </Float>
         </group>
       ))}
@@ -204,7 +224,7 @@ const Project1 = ({ isZoomed }) => {
       <group ref={modelRef}>
    
         <Html
-          position={[-7, 0, -8]}
+          position={position}
           transform
           occlude={false}
           style={{

@@ -11,8 +11,9 @@ import Project1 from './projects/Project1'
 
 import ProjectModel1 from './models/ProjectModel1'
 import Project3 from './projects/Project3'
-
+  import Project4 from './projects/Project4'
 import styled from 'styled-components'
+import ProjectModel4 from './models/ProjectModel4'
 
 // Composant pour le modèle 3D de chaque projet
 const ProjectModel = ({ project, isActive }) => {
@@ -23,6 +24,8 @@ const ProjectModel = ({ project, isActive }) => {
       return <ProjectModel2 isActive={isActive} />
     case 3:
       return <ProjectModel3 isActive={isActive} />
+    case 4:
+      return <ProjectModel4 isActive={isActive} />
     default:
       return null
   }
@@ -186,7 +189,7 @@ const Carousel3D = ({ projects, setActiveIndex }) => {
       rotationRef.current = -newAngle
       gsap.to(groupRef.current.rotation, {
         y: -newAngle,
-        duration: 1,
+        duration: 1.5,
         ease: "power2.out"
       })
     }
@@ -198,7 +201,7 @@ const Carousel3D = ({ projects, setActiveIndex }) => {
       rotationRef.current = -angle
       gsap.to(groupRef.current.rotation, {
         y: -angle,
-        duration: 1,
+        duration: 2,
         ease: "power2.out"
       })
     }
@@ -395,6 +398,8 @@ const ProjectContent = ({ project, isZoomed }) => {
       return <Project2 isZoomed={isZoomed} />
     case 3:
       return <Project3 isZoomed={isZoomed} />
+    case 4:
+      return <Project4 isZoomed={isZoomed} />
     default:
       return null
   }
