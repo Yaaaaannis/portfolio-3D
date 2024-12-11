@@ -2,7 +2,9 @@ import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { MeshReflectorMaterial } from '@react-three/drei'
 import "./App.css"
+
 
 // Components
 import Carousel3D from './components/Carousel3D'
@@ -15,6 +17,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [activeIndex, setActiveIndex] = useState(0)
   const [carouselVisible, setCarouselVisible] = useState(false)
+  const [cursorState, setCursorState] = useState('default')
 
   useEffect(() => {
     const minLoadingTime = setTimeout(() => {
@@ -91,6 +94,67 @@ function App() {
     }
   }, [projects.length])
 
+  // Curseur personnalisé
+  useEffect(() => {
+    const cursor = document.createElement('div')
+    const follower = document.createElement('div')
+    
+    cursor.className = 'cursor'
+    follower.className = 'cursor-follower'
+    
+    document.body.appendChild(cursor)
+    document.body.appendChild(follower)
+    
+    let mouseX = 0
+    let mouseY = 0
+    let posX = 0
+    let posY = 0
+    
+    gsap.to({}, {
+      duration: 0.016,
+      repeat: -1,
+      onRepeat: () => {
+        posX += (mouseX - posX) / 9
+        posY += (mouseY - posY) / 9
+
+        // Appliquer différents styles selon l'état du curseur
+        switch(cursorState) {
+          case 'project-hover':
+            cursor.classList.add('project-hover')
+            follower.classList.add('project-hover')
+            break
+          default:
+            cursor.classList.remove('project-hover')
+            follower.classList.remove('project-hover')
+        }
+        
+        gsap.set(follower, {
+          css: {
+            left: posX - 12,
+            top: posY - 12
+          }
+        })
+        
+        gsap.set(cursor, {
+          css: {
+            left: mouseX,
+            top: mouseY
+          }
+        })
+      }
+    })
+    
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+    })
+    
+    return () => {
+      document.body.removeChild(cursor)
+      document.body.removeChild(follower)
+    }
+  }, [cursorState])
+
   return (
     <div className="App">
       <Loader isLoading={isLoading} />
@@ -109,8 +173,11 @@ function App() {
             <Carousel3D 
               activeIndex={activeIndex} 
               setActiveIndex={setActiveIndex}
-              projects={projects} 
+              projects={projects}
             />
+            
+
+            
           </Canvas>
         </div>
       </Suspense>

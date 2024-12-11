@@ -97,7 +97,7 @@ const Label = styled.div`
   text-align: center;
 `
 
-const Carousel3D = ({ projects, setActiveIndex }) => {
+const Carousel3D = ({ projects, setActiveIndex, setCursorState }) => {
   const { raycaster, scene } = useThree()
   const groupRef = useRef()
   const timelineRef = useRef()
@@ -312,10 +312,12 @@ const Carousel3D = ({ projects, setActiveIndex }) => {
               }}
               onPointerOver={(e) => {
                 e.stopPropagation()
+                setCursorState('project-hover')
                 document.body.style.cursor = 'pointer'
               }}
               onPointerOut={(e) => {
                 e.stopPropagation()
+                setCursorState('default')
                 document.body.style.cursor = 'default'
               }}
             >

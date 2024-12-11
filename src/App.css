@@ -63,3 +63,58 @@ canvas {
   opacity: 1;
   transform: scale(1);
 }
+.cursor {
+  width: 8px;
+  height: 8px;
+  background: black;
+  border-radius: 100%;
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  transition: transform 0.2s;
+}
+
+.cursor.active {
+  transform: scale(2);
+  background: #ff3366;
+}
+
+.cursor-follower {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #000;
+  border-radius: 100%;
+  position: fixed;
+  z-index: 9998;
+  pointer-events: none;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.cursor-follower.active {
+  transform: scale(1.5);
+  border-color: #ff3366;
+  background: rgba(255, 51, 102, 0.1);
+}
+
+/* Cacher le curseur par défaut */
+* {
+  cursor: none !important;
+}
+
+.cursor.project-hover {
+  transform: scale(1.5);
+  background: #ff3366;
+  mix-blend-mode: difference;
+}
+
+.cursor-follower.project-hover {
+  transform: scale(2);
+  border-color: #ff3366;
+  background: rgba(255, 51, 102, 0.1);
+  mix-blend-mode: difference;
+}
+
+/* Animation pour la transition */
+.cursor, .cursor-follower {
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
